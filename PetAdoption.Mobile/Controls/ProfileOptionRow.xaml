@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="PetAdoption.Mobile.Controls.ProfileOptionRow"
+             x:Name="this">
+    <Grid BindingContext="{x:Reference this}"
+        RowDefinitions="*, auto"
+          ColumnDefinitions="*, auto"
+          RowSpacing="10">
+        <Label Grid.Row="0"
+               Grid.Column="0"
+               Text="{Binding Text}"
+               FontSize="18"></Label>
+        <Label Grid.Row="0"
+               Grid.Column="0"
+               Text="{Binding Option}"
+               IsVisible="false"></Label>
+        <Image Grid.Row="0"
+               Grid.Column="1"
+               Source="right_arrow"
+               HeightRequest="25"
+               WidthRequest="25">
+            <Image.Behaviors>
+                <toolkit:IconTintColorBehavior TintColor="Black"></toolkit:IconTintColorBehavior>
+            </Image.Behaviors>
+        </Image>
+        <BoxView Grid.Row="1"
+                 Grid.ColumnSpan="2"
+                 HeightRequest="1"
+                 Color="{StaticResource Primary}"
+                 Opacity="0.5"></BoxView>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"></TapGestureRecognizer>
+        </Grid.GestureRecognizers>
+    </Grid>
+</ContentView>

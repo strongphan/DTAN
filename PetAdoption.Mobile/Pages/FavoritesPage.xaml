@@ -1,12 +1,76 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:PetAdoption.Mobile.ViewModels"
+             xmlns:models="clr-namespace:PetAdoption.Mobile.Models"
+             xmlns:dtos="clr-namespace:PetAdoption.Shared.Dtos;assembly=PetAdoption.Shared"
+             xmlns:controls="clr-namespace:PetAdoption.Mobile.Controls"
              x:Class="PetAdoption.Mobile.Pages.FavoritesPage"
-             Title="FavoritesPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="FavoritesPage"
+             x:DataType="vm:FavoriteViewModel"
+             Shell.NavBarIsVisible="False">
+    <Grid>
+        <ScrollView Grid.Row="1"
+                    Padding="5">
+            <VerticalStackLayout>
+                <CollectionView ItemsSource="{Binding Pets}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="2"
+                                         HorizontalItemSpacing="15"
+                                         VerticalItemSpacing="15"></GridItemsLayout>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:PetSlim">
+                            <Border StrokeShape="RoundRectangle 50, 50, 0, 0"
+                                    StrokeThickness="0">
+                                <VerticalStackLayout Spacing="5">
+                                    <Grid>
+                                        <Image Source="{Binding Image}"
+                                               Aspect="AspectFill"
+                                               HeightRequest="150"></Image>
+                                        <Border Style="{StaticResource iconBtn}"
+                                                VerticalOptions="End"
+                                                Margin="-5">
+                                            <Image Source="favorite_filled">
+                                                <Image.Triggers>
+                                                    <DataTrigger TargetType="Image"
+                                                                 Binding="{Binding IsFavorite}"
+                                                                 Value="false">
+                                                        <Setter Property="Source"
+                                                                Value="heart"></Setter>
+                                                    </DataTrigger>
+                                                </Image.Triggers>
+                                                <Image.Behaviors>
+                                                    <toolkit:IconTintColorBehavior TintColor="{StaticResource Primary}"></toolkit:IconTintColorBehavior>
+                                                </Image.Behaviors>
+                                            </Image>
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:FavoriteViewModel}}, Path=ToggleFavoriteCommand}"
+                                                                      CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                                            </Border.GestureRecognizers>
+                                        </Border>
+                                    </Grid>
+                                    <Label Text="{Binding Name}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           HorizontalTextAlignment="Center"
+                                           TextColor="{StaticResource Primary}"></Label>
+                                </VerticalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:FavoriteViewModel}}, Path=GoToDetailPageCommand}"
+                                                          CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+        <ActivityIndicator HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"
+                           IsRunning="{Binding IsBusy}"></ActivityIndicator>
+    </Grid>
 </ContentPage>

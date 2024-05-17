@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetAdoption.Mobile.Pages.ChatPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:PetAdoption.Mobile.ViewModels"
+             xmlns:dtos="clr-namespace:PetAdoption.Shared.Dtos;assembly=PetAdoption.Shared"
+             Title="ChatPage"
+             Background="#13232f"
+             x:DataType="viewModel:ChatPageViewModel"
+             Shell.NavBarIsVisible="False"
+             Shell.PresentationMode="ModalAnimated"
+             >
+    <Grid RowDefinitions="40, *, 40">
+        <Grid Grid.Row="0"
+              Margin="10, 0">
+            <StackLayout  Orientation="Horizontal"
+                          HorizontalOptions="Start">
+                <ImageButton 
+                             BackgroundColor="#152c39"
+                             CornerRadius="5"
+                             HeightRequest="32"
+                             WidthRequest="32"
+                             Source="left_arrow"
+                             Command="{Binding GoBackCommand}">
+                    <ImageButton.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="{StaticResource Gray100}"></toolkit:IconTintColorBehavior>
+                    </ImageButton.Behaviors>
+                </ImageButton>
+                <Frame Margin="10,0,0,0"
+                       HeightRequest="32"
+                       WidthRequest="32"
+                       CornerRadius="16"
+                       IsClippedToBounds="True"
+                       IsVisible="{OnPlatform False, iOS=True}">
+                    <Image HeightRequest="32"
+                           Source="{Binding FriendInfo.ProfilePicture}"
+                           VerticalOptions="Center"
+                           WidthRequest="32"
+                           Aspect="AspectFill" />
+                </Frame>
+                <Border Margin="10,0,0,0"
+                        HeightRequest="32"
+                        WidthRequest="32"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 16"
+                        IsVisible="{OnPlatform False, Android=True}">
+                    <Image HeightRequest="32"
+                           Source="{Binding FriendInfo.ProfilePicture}"
+                           VerticalOptions="Center"
+                           WidthRequest="32"
+                           Aspect="AspectFill" />
+                </Border>
+                <Border Margin="10,0,0,0"
+                        WidthRequest="100"
+                        BackgroundColor="#13232f"
+                        StrokeThickness="0">
+                    <Label FontAttributes="Bold"
+                           FontSize="20"
+                           Text="{Binding FriendInfo.Name}"
+                           VerticalOptions="Center"
+                           TextColor="White" />
+                </Border>
+            </StackLayout>
+            <StackLayout HorizontalOptions="End"
+                         Orientation="Horizontal"
+                         VerticalOptions="Center">
+                <ImageButton BackgroundColor="#152c39"
+                             CornerRadius="5"
+                             HeightRequest="32"
+                             WidthRequest="32"
+                             Source="camera_alt">
+                    <ImageButton.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="{StaticResource Gray100}"></toolkit:IconTintColorBehavior>
+                    </ImageButton.Behaviors>
+                </ImageButton>
+                <Border StrokeThickness="0"
+                        StrokeShape="RoundRectangle 5"
+                        HeightRequest="32"
+                        WidthRequest="32"
+                        Margin="10,0,0,0"
+                        BackgroundColor="#152c39">
+                    <ImageButton HeightRequest="24"
+                                 WidthRequest="24"
+                                 Source="edit"
+                                 Aspect="AspectFill">
+                        <ImageButton.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="{StaticResource Gray100}"></toolkit:IconTintColorBehavior>
+                        </ImageButton.Behaviors>
+                    </ImageButton>
+                </Border>
+            </StackLayout>
+        </Grid>
+        <CollectionView Grid.Row="1"
+                        Margin="10, 0"
+                        ItemsSource="{Binding Messages}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout ItemSpacing="10"
+                                   Orientation="Vertical" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="dtos:MessagesDto">
+                    <VerticalStackLayout>
+                        <VerticalStackLayout.HorizontalOptions>
+                            <MultiBinding Converter="{StaticResource FromUserIdToHorizontalOptionConverter}">
+                                <Binding Path="SenderId" />
+                                <Binding Path="ReceiverId"
+                                         Source="{RelativeSource AncestorType={x:Type viewModel:ChatPageViewModel}}" />
+                            </MultiBinding>
+                        </VerticalStackLayout.HorizontalOptions>
+                        <Label Margin="5,0,5,0"
+                               FontSize="11"
+                               HorizontalOptions="Center"
+                               Text="{Binding SentOn, StringFormat='{0:HH:mm}'}" />
+                        <Frame Padding="10,6,10,6"
+                               CornerRadius="10">
+                            <Frame.BackgroundColor>
+                                <MultiBinding Converter="{StaticResource FromUserIdToBackgroudColorConverter}">
+                                    <Binding Path="SenderId" />
+                                    <Binding Path="ReceiverId"
+                                             Source="{RelativeSource AncestorType={x:Type viewModel:ChatPageViewModel}}" />
+                                </MultiBinding>
+                            </Frame.BackgroundColor>
+                            <Label FontSize="12"
+                                   Text="{Binding Content}"
+                                   TextColor="Black" />
+                        </Frame>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*, 40">
+            <Frame Margin="10, 0, 0, 0"
+                   Padding="10,0,10,0"
+                   BorderColor="Transparent"
+                   CornerRadius=" 20"
+                   HeightRequest=" 36">
+                <Entry Placeholder="Aa"
+                       Text="{Binding Message}"
+                       TextColor="Black"
+                       VerticalOptions="Center">
+                    <Entry.Behaviors>
+                        <toolkit:EventToCommandBehavior EventName="Unfocused"
+                                                        Command="{Binding SendMessageCommand}"></toolkit:EventToCommandBehavior>
+                    </Entry.Behaviors>
+                </Entry>
+            </Frame>
+            <ImageButton Grid.Column="1"
+                         BackgroundColor="#152c39"
+                         Command="{Binding SendMessageCommand}"
+                         CornerRadius="5"
+                         HeightRequest="32"
+                         WidthRequest="32"
+                         Source="send">
+                <ImageButton.Behaviors>
+                    <toolkit:IconTintColorBehavior TintColor="{StaticResource Gray100}"></toolkit:IconTintColorBehavior>
+                </ImageButton.Behaviors>
+            </ImageButton>
+        </Grid>
+        <ActivityIndicator HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"
+                           IsRunning="{Binding IsBusy}"></ActivityIndicator>
+    </Grid>
+</ContentPage>

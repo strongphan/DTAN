@@ -1,1 +1,2 @@
-﻿global using PetAdoption.Shared.Enumerations;
+﻿global using PetAdoption.Api.Services;
+global using PetAdoption.Shared.Enumerations;

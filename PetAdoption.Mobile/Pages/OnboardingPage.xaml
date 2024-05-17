@@ -3,10 +3,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PetAdoption.Mobile.Pages.OnboardingPage"
              Title="OnboardingPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid RowDefinitions="*, *">
+        <Frame Grid.Row="0"
+               CornerRadius="150"
+               IsClippedToBounds="True"
+               BorderColor="{StaticResource Primary}"
+               HeightRequest="300"
+               WidthRequest="300"
+               IsVisible="{OnPlatform False, iOS=True}">
+            <Image Source="img_1.png "
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Aspect="AspectFill"
+                   HeightRequest="300"
+                   WidthRequest="300"></Image>
+            <Frame.Shadow>
+                <Shadow Brush="{StaticResource Primary}"
+                        Radius="250"></Shadow>
+            </Frame.Shadow>
+        </Frame>
+        <Border Grid.Row="0"
+                StrokeThickness="10"
+                StrokeShape="RoundRectangle 150"
+                Stroke="{StaticResource Primary}"
+                HeightRequest="300"
+                WidthRequest="300"
+                IsVisible="{OnPlatform False, Android=True}">
+            <Image Source="img_1.png "
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Aspect="AspectFill"
+                   HeightRequest="300"
+                   WidthRequest="300"></Image>
+            <Border.Shadow>
+                <Shadow Brush="{StaticResource Primary}"
+                        Radius="250"></Shadow>
+            </Border.Shadow>
+        </Border>
+        <Grid Grid.Row="1"
+              RowDefinitions="*, Auto"
+              Padding="15">
+            <VerticalStackLayout Grid.Row="0"
+                                 Spacing="30">
+                <Label Text="Tìm kiếm người bạn thân"
+                       FontSize="40"
+                       FontAttributes="Bold"
+                       LineHeight="1.2"></Label>
+            </VerticalStackLayout>
+            <Button Grid.Row="1"
+                    Text="Khám phá"
+                    Style="{StaticResource btnPrimary}"
+                    Clicked="Button_Clicked"></Button>
+        </Grid>
+    </Grid>
 </ContentPage>

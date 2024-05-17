@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetAdoption.Mobile.Pages.ListChatPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:PetAdoption.Mobile.ViewModels"
+             xmlns:dtos="clr-namespace:PetAdoption.Shared.Dtos;assembly=PetAdoption.Shared"
+             Title="Chats"
+             Background="#13232f"
+             x:DataType="viewModel:ListChatPageViewModel"
+             Shell.NavBarIsVisible="False">
+    <Grid>
+        <Grid RowSpacing="10"
+              RowDefinitions="40, 45, 50, auto"
+              Margin="10">
+            <Grid>
+                <StackLayout Orientation="Horizontal">
+                    <Frame HeightRequest="36"
+                           WidthRequest="36"
+                           CornerRadius="18"
+                           IsClippedToBounds="True"
+                           IsVisible="{OnPlatform False, iOS=True}">
+                        <Image HeightRequest="36"
+                               Source="{Binding UserInfo.ProfilePicture}"
+                               VerticalOptions="Center"
+                               WidthRequest="36"
+                               Aspect="AspectFill" />
+                    </Frame>
+                    <Border HeightRequest="36"
+                            WidthRequest="36"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 18"
+                            IsVisible="{OnPlatform False, Android=True}">
+                        <Image HeightRequest="36"
+                               Source="{Binding UserInfo.ProfilePicture}"
+                               VerticalOptions="Center"
+                               WidthRequest="36" 
+                               Aspect="AspectFill"/>
+                    </Border>
+                    <Border BackgroundColor="Transparent"
+                            StrokeThickness="0">
+                        <Label Margin="10,0,0,0"
+                               FontAttributes="Bold"
+                               FontSize="20"
+                               Text="{Binding UserInfo.Name}"
+                               VerticalOptions="Center"
+                               TextColor="White" />
+                    </Border>
+                </StackLayout>
+                <StackLayout HorizontalOptions="End"
+                             Orientation="Horizontal"
+                             VerticalOptions="Center">
+                    <ImageButton Source="camera_alt"
+                                 HeightRequest="32"
+                                 WidthRequest="32"
+                                 BackgroundColor="#152c39"
+                                 CornerRadius="5">
+                        <ImageButton.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="{StaticResource Gray100}"></toolkit:IconTintColorBehavior>
+                        </ImageButton.Behaviors>
+                    </ImageButton>
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 5"
+                            HeightRequest="32"
+                            WidthRequest="32"
+                            Margin="10,0,0,0"
+                            BackgroundColor="#152c39">
+                        <ImageButton HeightRequest="24"
+                                     WidthRequest="24"
+                                     Source="edit"
+                                     Aspect="AspectFill">
+                            <ImageButton.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="{StaticResource Gray100}"></toolkit:IconTintColorBehavior>
+                            </ImageButton.Behaviors>
+                        </ImageButton>
+                    </Border>
+                </StackLayout>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Frame Padding="0"
+                       BackgroundColor="#152c39"
+                       BorderColor="Transparent"
+                       CornerRadius=" 45">
+                    <StackLayout HeightRequest="48"
+                                 Orientation="Horizontal"
+                                 VerticalOptions="Center">
+                        <Image Margin="20,0,0,0"
+                               BackgroundColor="Transparent"
+                               VerticalOptions="Center"
+                               Source="search"
+                               HeightRequest="25"
+                               WidthRequest="25">
+                            <Image.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="{StaticResource Gray100}"></toolkit:IconTintColorBehavior>
+                            </Image.Behaviors>
+                        </Image>
+                        <Label Margin="10,0,0,0"
+                               Text="Search"
+                               TextColor="Gray"
+                               VerticalOptions="Center" />
+                    </StackLayout>
+                </Frame>
+            </Grid>
+            <Grid Grid.Row="2"
+                  ColumnDefinitions="auto, auto">
+                <StackLayout WidthRequest="72">
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 27"
+                            HeightRequest="54"
+                            WidthRequest="54"
+                            BackgroundColor="#152c39"
+                            Margin="-10, 0, 0, 0">
+                        <ImageButton HeightRequest="30"
+                                     WidthRequest="30"
+                                     Source="video_call"
+                                     Aspect="AspectFill">
+                            <ImageButton.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="{StaticResource Gray100}"></toolkit:IconTintColorBehavior>
+                            </ImageButton.Behaviors>
+                        </ImageButton>
+                    </Border>
+                </StackLayout>
+                <CollectionView Grid.Column="1"
+                                ItemsSource="{Binding UserFriends}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="10"
+                                           Orientation="Horizontal" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dtos:UserDto">
+                            <VerticalStackLayout>
+                                <Grid HeightRequest="54"
+                                      WidthRequest="54">
+                                    <Frame HeightRequest="54"
+                                           WidthRequest="54"
+                                           CornerRadius="27"
+                                           IsClippedToBounds="True"
+                                           IsVisible="{OnPlatform False, iOS=True}">
+                                        <Image HeightRequest="54"
+                                               HorizontalOptions="Start"
+                                               Source="{Binding ProfilePicture}"
+                                               WidthRequest="54"
+                                               Aspect="AspectFill">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Path=OpenChatPageCommand, Source={RelativeSource AncestorType={x:Type viewModel:ListChatPageViewModel}}}"
+                                                                      CommandParameter="{Binding Id}" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </Frame>
+                                    <Border HeightRequest="54"
+                                            WidthRequest="54"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 27"
+                                            IsVisible="{OnPlatform False, Android=True}">
+                                        <Image HeightRequest="54"
+                                               HorizontalOptions="Start"
+                                               Source="{Binding ProfilePicture}"
+                                               WidthRequest="54"
+                                               Aspect="AspectFill">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Path=OpenChatPageCommand, Source={RelativeSource AncestorType={x:Type viewModel:ListChatPageViewModel}}}"
+                                                                      CommandParameter="{Binding Id}" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </Border>
+                                </Grid>
+                                <Label Margin="0,5,0,0"
+                                       FontSize="12"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding Name}" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+            <ListView Grid.Row="3"
+                      ItemsSource="{Binding LastestMessages}"
+                      RowHeight="64"
+                      SeparatorVisibility="None"
+                      VerticalScrollBarVisibility="Never">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="dtos:LastestMessage">
+                        <ViewCell>
+                            <HorizontalStackLayout>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=OpenChatPageCommand, Source={RelativeSource AncestorType={x:Type viewModel:ListChatPageViewModel}}}"
+                                                          CommandParameter="{Binding UserFriendInfo.Id}" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid HeightRequest="54"
+                                      WidthRequest="54"
+                                      ColumnSpacing="10"
+                                      RowSpacing="1"
+                                      RowDefinitions="auto, auto"
+                                      ColumnDefinitions="auto, auto">
+                                    <Frame Grid.Column="2"
+                                           Grid.RowSpan="2"
+                                           HeightRequest="54"
+                                           WidthRequest="54"
+                                           CornerRadius="27"
+                                           IsClippedToBounds="True"
+                                           IsVisible="{OnPlatform False, iOS=True}">
+                                        <Image HeightRequest="54"
+                                               HorizontalOptions="Start"
+                                               Source="{Binding UserFriendInfo.ProfilePicture}"
+                                               Aspect="AspectFill"
+                                               WidthRequest="54" />
+                                    </Frame>
+                                    <Border Grid.Column="0"
+                                            Grid.RowSpan="2"
+                                            HeightRequest="54"
+                                            WidthRequest="54"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 27"
+                                            IsVisible="{OnPlatform False, Android=True}">
+                                        <Image HeightRequest="54"
+                                               HorizontalOptions="Start"
+                                               Source="{Binding UserFriendInfo.ProfilePicture}"
+                                               WidthRequest="54"
+                                               Aspect="AspectFill" />
+                                    </Border>
+                                    <Label Grid.Row="0"
+                                           Grid.Column="1"
+                                           FontSize="17"
+                                           FontAttributes="Bold"
+                                           Text="{Binding UserFriendInfo.Name}"
+                                           VerticalOptions="Start"
+                                           TextColor="White"
+                                           HorizontalOptions="Start" />
+                                    <Label Grid.Row="1"
+                                           Grid.Column="1"
+                                           FontSize="12"
+                                           HorizontalOptions="Start"
+                                           Text="{Binding Content}"
+                                           TextColor="White"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </HorizontalStackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <ActivityIndicator HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"
+                           IsRunning="{Binding IsBusy}"></ActivityIndicator>
+    </Grid>
+</ContentPage>

@@ -2,11 +2,177 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PetAdoption.Mobile.Pages.DetailsPage"
-             Title="DetailsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:PetAdoption.Mobile.ViewModels"
+             xmlns:models="clr-namespace:PetAdoption.Mobile.Models"
+             xmlns:dtos="clr-namespace:PetAdoption.Shared.Dtos;assembly=PetAdoption.Shared"
+             xmlns:controls="clr-namespace:PetAdoption.Mobile.Controls"
+             Shell.NavBarIsVisible="False"
+             Shell.PresentationMode="ModalAnimated"
+             x:DataType="vm:DetailViewModel"
+             Background="{StaticResource BgColor}">
+    <Grid RowDefinitions="auto, *, *, auto"
+          RowSpacing="20"
+          Padding="10">
+        <FlexLayout Grid.Row="0"
+                    JustifyContent="SpaceBetween">
+            <Border Style="{StaticResource iconBtn}">
+                <Image Source="left_arrow"></Image>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"></TapGestureRecognizer>
+                </Border.GestureRecognizers>
+            </Border>
+            <Label Text="Chi tiết thú cưng"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"></Label>
+            <Border Style="{StaticResource iconBtn}">
+                <Image Source="heart">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                                     Binding="{Binding PetDetail.IsFavorite}"
+                                     Value="true">
+                            <Setter Property="Source"
+                                    Value="favorite_filled"></Setter>
+                        </DataTrigger>
+                    </Image.Triggers>
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="{StaticResource Primary}"></toolkit:IconTintColorBehavior>
+                    </Image.Behaviors>
+                </Image>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}"></TapGestureRecognizer>
+                </Border.GestureRecognizers>
+            </Border>
+        </FlexLayout>
+        <Frame Grid.Row="1"
+               HeightRequest="300"
+               WidthRequest="300"
+               CornerRadius="150"
+               IsClippedToBounds="True"
+               HorizontalOptions="Center">
+            <Image Source="{Binding PetDetail.Image}"
+                   HeightRequest="300"
+                   WidthRequest="300"
+                   Aspect="AspectFill"></Image>
+        </Frame>
+        <Grid Grid.Row="2"
+              RowDefinitions="auto, auto, auto, auto, auto"
+              ColumnDefinitions="*, *, *"
+              RowSpacing="25">
+            <Label Grid.Row="0"
+                   Grid.ColumnSpan="2"
+                   Text="{Binding PetDetail.Name}"
+                   FontSize="25"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="End"></Label>
+            <Border Grid.Row="0"
+                    Grid.Column="2"
+                    Background="White"
+                    VerticalOptions="End"
+                    StrokeThickness="0">
+                <Label Text="{Binding PetDetail.Price, StringFormat='{0:C}'}"
+                       TextColor="{StaticResource Primary}"
+                       FontSize="25"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="End"></Label>
+            </Border>
+            <Label Grid.Row="1"
+                   Grid.ColumnSpan="3"
+                   Text="{Binding PetDetail.Description}"
+                   FontSize="16"
+                   LineHeight="1.5"></Label>
+            <controls:PetFeatControl Grid.Row="2"
+                                     Grid.Column="0"
+                                     Icon="breed"
+                                     Label="Giống"
+                                     Value="{Binding PetDetail.Breed}"></controls:PetFeatControl>
+            <controls:PetFeatControl Grid.Row="2"
+                                     Grid.Column="1"
+                                     Icon="{Binding PetDetail.GenderImage}"
+                                     Label="Giới tính"
+                                     Value="{Binding PetDetail.GenderDisplay}"></controls:PetFeatControl>
+            <controls:PetFeatControl Grid.Row="2"
+                                     Grid.Column="2"
+                                     Icon="calendar"
+                                     Label="Tuổi"
+                                     Value="{Binding PetDetail.Age}"></controls:PetFeatControl>
+            <Grid Grid.Row="3"
+                  RowDefinitions="auto, auto"
+                  ColumnDefinitions="auto, 250, auto"
+                  ColumnSpacing="10">
+                <Frame Grid.RowSpan="2"
+                       Grid.Column="0"
+                       HeightRequest="36"
+                       WidthRequest="36"
+                       CornerRadius="18"
+                       IsClippedToBounds="True"
+                       IsVisible="{OnPlatform False, iOS=True}">
+                    <Image HeightRequest="36"
+                           Source="{Binding PetDetail.Owner.ProfilePicture}"
+                           VerticalOptions="Center"
+                           WidthRequest="36"
+                           Aspect="AspectFill" />
+                </Frame>
+                <Border Grid.RowSpan="2"
+                        Grid.Column="0"
+                        HeightRequest="36"
+                        WidthRequest="36"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 18"
+                        IsVisible="{OnPlatform False, Android=True}">
+                    <Image HeightRequest="36"
+                           Source="{Binding PetDetail.Owner.ProfilePicture}"
+                           VerticalOptions="Center"
+                           WidthRequest="36"
+                           Aspect="AspectFill" />
+                </Border>
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       FontAttributes="Bold"
+                       FontSize="20"
+                       Text="{Binding PetDetail.Owner.Name}"
+                       VerticalOptions="Start"
+                       HorizontalOptions="Start" />
+                <Label Grid.Row="1"
+                       Grid.Column="1"
+                       FontAttributes="Bold"
+                       FontSize="15"
+                       Text="{Binding PetDetail.Owner.Address}"
+                       VerticalOptions="Start"
+                       HorizontalOptions="Start" />
+                <Border Grid.RowSpan="2"
+                        Grid.Column="2"
+                        Style="{StaticResource iconBtn}">
+                    <Image Source="messager"></Image>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}"></TapGestureRecognizer>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+            <Label Grid.Row="4" Text="{Binding PetDetail.distance}"></Label>
+        </Grid>
+        <Button Grid.Row="3"
+                Text="Nhận nuôi ngay"
+                Style="{StaticResource btnPrimary}"
+                Command="{Binding AdoptNowCommand}">
+            <Button.Triggers>
+                <DataTrigger TargetType="Button"
+                             Binding="{Binding PetDetail.AdoptionStatus}"
+                             Value="Adopted">
+                    <Setter Property="Text"
+                            Value="Đã được nhận nuôi"></Setter>
+                    <Setter Property="IsEnabled"
+                            Value="False"></Setter>
+                    <Setter Property="BackgroundColor"
+                            Value="{StaticResource Gray300}"></Setter>
+                </DataTrigger>
+            </Button.Triggers>
+        </Button>
+        <ActivityIndicator Grid.RowSpan="4"
+                           HorizontalOptions="Center"
+                           IsRunning="{Binding IsBusy}"
+                           VerticalOptions="Center"
+                           Color="{StaticResource Primary}"></ActivityIndicator>
+    </Grid>
 </ContentPage>

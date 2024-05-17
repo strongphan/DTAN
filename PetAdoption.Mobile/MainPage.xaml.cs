@@ -4,35 +4,20 @@ namespace PetAdoption.Mobile
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
-
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            //Check if onboarding shown already
-            // If this is the first time (Onboarding not shown), Move to Onboarding Page
-            // else move to home page
 
-            await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
-
-
-        }
-
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
+            //Check if onboarding screen show
+            if (Preferences.Default.ContainsKey(UIConstants.OnboardingShown))
+                await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
             else
-                CounterBtn.Text = $"Clicked {count} times";
+                await Shell.Current.GoToAsync($"//{nameof(OnboardingPage)}");
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
         }
     }
 }

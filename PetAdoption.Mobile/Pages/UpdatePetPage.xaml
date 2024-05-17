@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PetAdoption.Mobile.Pages.UpdatePetPage"
+             xmlns:vm="clr-namespace:PetAdoption.Mobile.ViewModels"
+             xmlns:models="clr-namespace:PetAdoption.Mobile.Models"
+             x:DataType="vm:UpdatePetViewModel"
+             Title="UpdatePetPage">
+    <ScrollView Margin="10">
+        <StackLayout Orientation="Vertical"
+                     Spacing="10">
+            <StackLayout Orientation="Horizontal"
+                         Spacing="10">
+                <Label Text="Tên thú cưng"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <Entry Placeholder="Name"
+                       Text="{Binding Model.Name}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="StartAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         Spacing="10">
+                <Label Text="Loại thú cưng"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <Entry Placeholder="Type"
+                       Text="{Binding Model.Type}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="StartAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         Spacing="10">
+                <Label Text="Giống thú cưng"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <Entry Placeholder="Breed"
+                       Text="{Binding Model.Breed}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="StartAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         Spacing="10">
+                <Label Text="Giới tính"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <RadioButton Content="Đực"
+                             GroupName="Gender"
+                             IsChecked="{Binding Model.Gender, Converter={StaticResource IntToBoolConverter}, ConverterParameter='0'}" />
+                <RadioButton Content="Cái"
+                             GroupName="Gender"
+                             IsChecked="{Binding Model.Gender, Converter={StaticResource IntToBoolConverter}, ConverterParameter='1'}" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         Spacing="10">
+                <Label Text="Giá tiền"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <Entry Placeholder="Price"
+                       Text="{Binding Model.Price, StringFormat='{}{0:C0}'}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="StartAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         Spacing="10">
+                <Label Text="Ngày sinh"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <DatePicker Date="{Binding Model.DateOfBirth}"
+                            VerticalOptions="Center"
+                            HorizontalOptions="StartAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Vertical"
+                         Spacing="10">
+                <Label Text="Giới thiệu"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <Editor Placeholder="Description"
+                        Text="{Binding Model.Description}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         Spacing="10">
+                <Label Text="Lượt xem"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <Label Text="{Binding Model.Views }"
+                       VerticalOptions="Center"
+                       HorizontalOptions="StartAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Vertical"
+                         Spacing="10">
+                <Label Text="Tình trạng"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <StackLayout Orientation="Horizontal">
+                    <RadioButton Content="Đang đăng"
+                                 GroupName="AdoptionStatus"
+                                 IsChecked="{Binding Model.AdoptionStatus, Converter={StaticResource IntToBoolConverter}, ConverterParameter='0'}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="StartAndExpand" />
+                    <RadioButton Content="Đang xử lý"
+                                 GroupName="AdoptionStatus"
+                                 IsChecked="{Binding Model.AdoptionStatus, Converter={StaticResource IntToBoolConverter}, ConverterParameter='1'}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="StartAndExpand" />
+                    <RadioButton Content="Đã được nhận"
+                                 GroupName="AdoptionStatus"
+                                 IsChecked="{Binding Model.AdoptionStatus, Converter={StaticResource IntToBoolConverter}, ConverterParameter='2'}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="StartAndExpand" />
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Trạng thái"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <Switch IsToggled="{Binding Model.IsActive}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="StartAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Ảnh thú cưng"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"></Label>
+                <Image Source="{Binding Image}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="FillAndExpand"
+                       WidthRequest="100"
+                       HeightRequest="100" />
+                <Button Text="Chọn ảnh"
+                        Command="{Binding SelectImageCommand}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="End" />
+            </StackLayout>
+            <StackLayout Orientation="Vertical">
+                <Button Text="Update"
+                        Command="{Binding UpdateCommand}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

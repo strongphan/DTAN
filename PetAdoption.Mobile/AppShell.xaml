@@ -3,10 +3,14 @@
     x:Class="PetAdoption.Mobile.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:local="clr-namespace:PetAdoption.Mobile"
     xmlns:pages="clr-namespace:PetAdoption.Mobile.Pages"
     Shell.FlyoutBehavior="Flyout">
 
+    <Shell.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource Primary}" StatusBarStyle="LightContent"></toolkit:StatusBarBehavior>
+    </Shell.Behaviors>
     <Shell.FlyoutHeader>
         <Grid Padding="25" BackgroundColor="{StaticResource Primary}">
             <Label
@@ -25,6 +29,22 @@
         Shell.NavBarIsVisible="False"
         Shell.TabBarIsVisible="False" />
 
+    <ShellContent
+    Title="Onboarding"
+    ContentTemplate="{DataTemplate pages:OnboardingPage}"
+    Route="OnboardingPage"
+    Shell.FlyoutItemIsVisible="False"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False" />
+
+    <ShellContent
+    Title=""
+    ContentTemplate="{DataTemplate pages:LoginRegisterPage}"
+    Route="LoginRegisterPage"
+    Shell.FlyoutItemIsVisible="False"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False" />
+
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent
             Title="Home"
@@ -41,6 +61,10 @@
             ContentTemplate="{DataTemplate pages:FavoritesPage}"
             Icon="heart"
             Route="FavoritesPage" />
+        <ShellContent Title="Chat"
+                      ContentTemplate="{DataTemplate pages:ListChatPage}"
+                      Icon="messager"
+                      Route="ListChatPage" />
         <ShellContent
             Title="Profile"
             ContentTemplate="{DataTemplate pages:ProfilePage}"

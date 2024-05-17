@@ -1,12 +1,89 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:controls="clr-namespace:PetAdoption.Mobile.Controls"
+             xmlns:vm="clr-namespace:PetAdoption.Mobile.ViewModels"
+             xmlns:models="clr-namespace:PetAdoption.Mobile.Models"
+             xmlns:dtos="clr-namespace:PetAdoption.Shared.Dtos;assembly=PetAdoption.Shared"
              x:Class="PetAdoption.Mobile.Pages.ProfilePage"
-             Title="ProfilePage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="ProfilePage"
+             x:DataType="vm:ProfileViewModel"
+             Padding="15, 25"
+             Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="auto, *, auto"
+          RowSpacing="15">
+        <VerticalStackLayout Grid.Row="0">
+            <Border BackgroundColor="{StaticResource Primary}"
+                    HeightRequest="100"
+                    WidthRequest="100"
+                    StrokeShape="RoundRectangle 50"
+                    StrokeThickness="0">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding IsLoggedIn}"
+                                 Value="True">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Image Source="{Binding ProfilePicture}"
+                                       HeightRequest="100"
+                                       WidthRequest="100"
+                                       Aspect="AspectFill"></Image>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding IsLoggedIn}"
+                                 Value="False">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Label Text="{Binding Initials}"
+                                       TextColor="White"
+                                       FontSize="50"
+                                       Padding="10"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       TextTransform="Uppercase"
+                                       FontAttributes="Bold"></Label>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Border.Triggers>
+            </Border>
+            <Label Text="{Binding UserName}"
+                   FontSize="20"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}"></Label>
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="1"
+                             Spacing="10"
+                             Padding="15">
+            <controls:ProfileOptionRow Text="Thú cưng đã nhận"
+                                       Option="myAdoptions"
+                                       Tapped="ProfileOptionRow_Tapped"></controls:ProfileOptionRow>
+            <controls:ProfileOptionRow Text="Thú cưng đã đăng"
+                                       Option="myPets"
+                                       Tapped="ProfileOptionRow_Tapped"></controls:ProfileOptionRow>
+            <controls:ProfileOptionRow Text="Đổi mật khẩu"
+                                       Option="changePassword"
+                                       Tapped="ProfileOptionRow_Tapped"></controls:ProfileOptionRow>
+        </VerticalStackLayout>
+        <Button Grid.Row="2"
+                Padding="50,5"
+                HeightRequest="40"
+                HorizontalOptions="Center"
+                Text="Đăng nhập"
+                Command="{Binding LoginLogoutCommand}">
+            <Button.Triggers>
+                <DataTrigger Binding="{Binding IsLoggedIn}"
+                             TargetType="Button"
+                             Value="True">
+                    <Setter Property="Text"
+                            Value="Đăng xuất"></Setter>
+                </DataTrigger>
+            </Button.Triggers>
+        </Button>
+    </Grid>
 </ContentPage>

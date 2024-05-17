@@ -1,12 +1,151 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PetAdoption.Mobile.ViewModels"
+             xmlns:models="clr-namespace:PetAdoption.Mobile.Models"
+             xmlns:dtos="clr-namespace:PetAdoption.Shared.Dtos;assembly=PetAdoption.Shared"
              x:Class="PetAdoption.Mobile.Pages.HomePage"
-             Title="HomePage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="HomePage"
+             Shell.NavBarIsVisible="False"
+             x:DataType="vm:HomeViewModel">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="petsListTemplate"
+                          x:DataType="dtos:PetListDto">
+                <VerticalStackLayout Spacing="2">
+                    <Frame HeightRequest="100"
+                           WidthRequest="100"
+                           CornerRadius="50"
+                           IsClippedToBounds="True"
+                           IsVisible="{OnPlatform False, iOS=True}">
+                        <Image Source="{Binding Image}"
+                               HeightRequest="100"
+                               WidthRequest="100"
+                               Aspect="AspectFill"></Image>
+                    </Frame>
+                    <Border HeightRequest="100"
+                            WidthRequest="100"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 50"
+                            IsVisible="{OnPlatform False, Android=True}">
+                        <Image Source="{Binding Image}"
+                               HeightRequest="100"
+                               WidthRequest="100"
+                               Aspect="AspectFill"></Image>
+                    </Border>
+                    <Label Text="{Binding Name}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"></Label>
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={x:RelativeSource 
+                            AncestorType={x:Type vm:HomeViewModel}}, Path=GoToDetailPageCommand}"
+                                              CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="60, *">
+        <VerticalStackLayout Grid.Row="0"
+                             Spacing="5"
+                             Padding="10">
+            <Label Text="{Binding UserName, StringFormat='Xin chào, {0}'}"
+                   FontSize="16" />
+        </VerticalStackLayout>
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="10">
+                <CarouselView ItemsSource="{Binding NewlyAdded}"
+                              HeightRequest="300">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate x:DataType="dtos:PetListDto">
+                            <Grid RowDefinitions="*, auto, auto"
+                                  RowSpacing="5"
+                                  Padding="5">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:RelativeSource 
+                                        AncestorType={x:Type vm:HomeViewModel}}, Path=GoToDetailPageCommand}"
+                                                          CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                                </Grid.GestureRecognizers>
+                                <Frame Grid.Row="0"
+                                       HeightRequest="250"
+                                       WidthRequest="250"
+                                       CornerRadius="125"
+                                       IsClippedToBounds="True"
+                                       IsVisible="{OnPlatform False, iOS=True}">
+                                    <Image Source="{Binding Image}"
+                                           HeightRequest="250"
+                                           WidthRequest="250"
+                                           Aspect="AspectFill"></Image>
+                                </Frame>
+                                <Border Grid.Row="0"
+                                        HeightRequest="250"
+                                        WidthRequest="250"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 125"
+                                        IsVisible="{OnPlatform False, Android=True}">
+                                    <Image Source="{Binding Image}"
+                                           HeightRequest="250"
+                                           WidthRequest="250"
+                                           Aspect="AspectFill"></Image>
+                                </Border>
+                                <Label Grid.Row="1"
+                                       Text="{Binding Name}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       FontSize="20"
+                                       FontAttributes="Bold"></Label>
+                                <Label Grid.Row="2"
+                                       Text="{Binding Price, StringFormat='{0:C}'}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"></Label>
+                            </Grid>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+                <VerticalStackLayout Padding="10"
+                                     Spacing="10">
+                    <Label Text="Thú cưng phổ biến"
+                           FontSize="22"
+                           FontAttributes="Bold"></Label>
+                    <CollectionView ItemsSource="{Binding Popular}"
+                                    ItemTemplate="{StaticResource petsListTemplate}"
+                                    HeightRequest="125">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal"
+                                               ItemSpacing="10"></LinearItemsLayout>
+                        </CollectionView.ItemsLayout>
+                    </CollectionView>
+                </VerticalStackLayout>
+                <VerticalStackLayout Padding="10"
+                                     Spacing="10">
+                    <Label Text="Có thể bạn thích"
+                           FontSize="22"
+                           FontAttributes="Bold"></Label>
+                    <CollectionView ItemsSource="{Binding Random}"
+                                    ItemTemplate="{StaticResource petsListTemplate}"
+                                    HeightRequest="125">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal"
+                                               ItemSpacing="10"></LinearItemsLayout>
+                        </CollectionView.ItemsLayout>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Grid Grid.RowSpan="2"
+              IsVisible="{Binding IsBusy}">
+            <BoxView Color="{StaticResource Primary}"
+                     Opacity="1"></BoxView>
+            <ActivityIndicator VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               IsRunning="True"
+                               Color="White"></ActivityIndicator>
+        </Grid>
+    </Grid>
 </ContentPage>
