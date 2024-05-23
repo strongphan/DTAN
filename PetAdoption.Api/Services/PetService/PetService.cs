@@ -58,5 +58,23 @@ namespace PetAdoption.Api.Services
 
             return ApiResponse<PetDetailDto>.Success(petDto);
         }
+
+        public async Task<ApiResponse<List<PetListDto>>> GetBySearch(string? input)
+        {
+            List<Pet> pets;
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                pets = await _context.Pets.OrderByDescending(p => p.Id).ToListAsync();
+
+            }
+            else
+            {
+                pets = await _context.Pets
+                .Where(p => p.Name.Contains(input) || p.Type.Contains(input) || p.Breed.Contains(input))
+                .OrderByDescending(p => p.Id).ToListAsync();
+            }
+            var petListDto = _mapper.Map<List<PetListDto>>(pets);
+            return ApiResponse<List<PetListDto>>.Success(petListDto);
+        }
     }
 }

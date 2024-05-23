@@ -12,14 +12,24 @@
         <RefreshView Command="{Binding LoadPetsCommand}"
                      RefreshColor="{StaticResource Primary}"
                      IsRefreshing="{Binding IsRefreshing}">
-            <Grid RowDefinitions="auto, *">
-                <Label Grid.Row="0"
+            <Grid RowDefinitions="auto, auto, *">
+                <SearchBar Grid.Row="0"
+                           x:Name="searchBar"
+                           Placeholder="Nhập tên, loại, giống thú cưng..."
+                           PlaceholderColor="{StaticResource Primary }"
+                           TextColor="{StaticResource Primary}"
+                           WidthRequest="350"
+                           SearchCommand="{Binding SearchCommand}"
+                           SearchCommandParameter="{Binding Source={x:Reference searchBar}, Path=Text}"
+                           TextChanged="SearchBar_TextChanged"
+                           ></SearchBar>
+                <Label Grid.Row="1"
                        Text="Kéo xuống để tải lại"
                        FontSize="12"
                        HorizontalOptions="Center"
                        Padding="5"
                        TextColor="{StaticResource Gray500}"></Label>
-                <ScrollView Grid.Row="1"
+                <ScrollView Grid.Row="2"
                             Padding="5">
                     <CollectionView ItemsSource="{Binding Pets}">
                         <CollectionView.ItemTemplate>
@@ -67,6 +77,26 @@
                                 </VerticalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center">
+                                <Label Text="Không có thú cưng được tìm thấy"
+                                       FontSize="25"
+                                       TextColor="Gray"
+                                       HorizontalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsBusy}"
+                                                     Value="true">
+                                            <Setter Property="Text"
+                                                    Value="Tìm kiếm..."></Setter>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
                     </CollectionView>
                 </ScrollView>
             </Grid>

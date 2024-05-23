@@ -96,7 +96,7 @@
                         HorizontalOptions="End" />
             </StackLayout>
             <StackLayout Orientation="Vertical">
-                <Button Text="Update"
+                <Button Text="Create"
                         Command="{Binding CreateCommand}"
                         VerticalOptions="Center"
                         HorizontalOptions="FillAndExpand" />

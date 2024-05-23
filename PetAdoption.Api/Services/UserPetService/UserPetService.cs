@@ -21,6 +21,34 @@ namespace PetAdoption.Api.Services
             _env = env;
         }
 
+        public async Task<ApiResponse<List<PetListDto>>> GetBySearch(string? input, int ownerId)
+        {
+            List<Pet> pets;
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                pets = await _context.Pets
+                 .Include(p => p.OwnedPets)
+                     .ThenInclude(op => op.User)
+                         .Where(p => p.OwnedPets.All(op => op.UserId != ownerId))
+                 .OrderByDescending(p => p.Id)
+                 .ToListAsync();
+
+            }
+            else
+            {
+                pets = await _context.Pets
+                 .Include(p => p.OwnedPets)
+                     .ThenInclude(op => op.User)
+                         .Where(p => p.OwnedPets.All(op => op.UserId != ownerId)
+                         && (p.Name.Contains(input) || p.Type.Contains(input) || p.Breed.Contains(input)))
+                 .OrderByDescending(p => p.Id)
+                 .ToListAsync();
+
+            }
+            var petListDto = _mapper.Map<List<PetListDto>>(pets);
+            return ApiResponse<List<PetListDto>>.Success(petListDto);
+        }
+
         // Toggles a pet as a favorite for a user
         public async Task<ApiResponse> ToggleFavoriteAsync(int userId, int petId)
         {
@@ -137,13 +165,14 @@ namespace PetAdoption.Api.Services
             try
             {
                 var pet = _mapper.Map<Pet>(dto);
+                var imageID = Guid.NewGuid();
                 if (dto.ImageData != null && dto.ImageData.Length > 0)
                 {
-                    var imagePath = Path.Combine(_env.WebRootPath, "images/pets", $"image_{pet.Id}.jpg");
+                    var imagePath = Path.Combine(_env.WebRootPath, "images/pets", $"image_{imageID}.jpg");
 
                     await File.WriteAllBytesAsync(imagePath, dto.ImageData);
                 }
-                pet.Image = $"image_{pet.Id}.jpg";
+                pet.Image = $"image_{imageID}.jpg";
 
                 await _context.Pets.AddAsync(pet);
                 await _context.SaveChangesAsync();
@@ -182,15 +211,17 @@ namespace PetAdoption.Api.Services
                         File.Delete(oldImagePath);
                     }
                 }
+                var imageID = Guid.NewGuid();
+
                 if (dto.ImageData != null && dto.ImageData.Length > 0)
                 {
-                    var imagePath = Path.Combine(_env.WebRootPath, "images/pets", $"image_{pet.Id}.jpg");
+                    var imagePath = Path.Combine(_env.WebRootPath, "images/pets", $"image_{imageID}.jpg");
 
                     await File.WriteAllBytesAsync(imagePath, dto.ImageData);
                 }
                 _mapper.Map(dto, pet);
 
-                pet.Image = $"image_{pet.Id}.jpg";
+                pet.Image = $"image_{imageID}.jpg";
 
                 _context.Pets.Update(pet);
                 await _context.SaveChangesAsync();
@@ -260,11 +291,12 @@ namespace PetAdoption.Api.Services
                 return ApiResponse<PetDetailDto>.Success(petDto);
             }
         }
-        public async Task<ApiResponse<List<PetListDto>>> GetPopularPetList(int count, string address)
+        public async Task<ApiResponse<List<PetListDto>>> GetPopularPetList(int count, int ownerId, string address)
         {
             var pets = await _context.Pets
                 .Include(p => p.OwnedPets)
                     .ThenInclude(op => op.User)
+                        .Where(p => p.OwnedPets.All(op => op.UserId != ownerId))
                 .OrderByDescending(p => p.Views)
                 .Take(count)
                 .ToListAsync();
@@ -281,11 +313,12 @@ namespace PetAdoption.Api.Services
 
         }
 
-        public async Task<ApiResponse<List<PetListDto>>> GetRandomPetList(int count, string address)
+        public async Task<ApiResponse<List<PetListDto>>> GetRandomPetList(int count, int ownerId, string address)
         {
             var pets = await _context.Pets
                 .Include(p => p.OwnedPets)
                     .ThenInclude(op => op.User)
+                        .Where(p => p.OwnedPets.All(op => op.UserId != ownerId))
                 .OrderByDescending(_ => Guid.NewGuid())
                 .Take(count)
                 .ToListAsync();
@@ -307,12 +340,13 @@ namespace PetAdoption.Api.Services
             return ApiResponse<List<PetListDto>>.Success(petListDto);
         }
 
-        public async Task<ApiResponse<List<PetListDto>>> GetNewPetList(int count, string address)
+        public async Task<ApiResponse<List<PetListDto>>> GetNewPetList(int count, int ownerId, string address)
         {
 
             var pets = await _context.Pets
                 .Include(p => p.OwnedPets)
                     .ThenInclude(op => op.User)
+                        .Where(p => p.OwnedPets.All(op => op.UserId != ownerId))
                 .OrderByDescending(p => p.Id)
                 .Take(count)
                 .ToListAsync();

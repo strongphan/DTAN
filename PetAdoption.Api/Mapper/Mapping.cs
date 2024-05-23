@@ -11,7 +11,7 @@ namespace PetAdoption.Api.Mapper
         {
             CreateMap<PetCreateDto, Pet>();
             CreateMap<PetUpdateDto, Pet>();
-
+            CreateMap<UserDto, User>();
             CreateMap<Pet, PetListDto>()
                 .ForMember(p => p.Image,
                 opt => opt.MapFrom(src => $"{AppConstants.BaseURL}/images/pets/{src.Image}"));

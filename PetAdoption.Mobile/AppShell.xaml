@@ -74,14 +74,10 @@
 
     <Shell.FlyoutFooter>
         <Grid Padding="10" BackgroundColor="{StaticResource Primary}">
-            <Label
-                FontSize="15"
-                HorizontalOptions="Center"
-                Text="Created by Abhay Prince"
-                TextColor="White" />
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-            </Grid.GestureRecognizers>
+            <Label FontSize="15"
+                   HorizontalOptions="Center"
+                   Text="Created by Manh Phan"
+                   TextColor="White" />
         </Grid>
     </Shell.FlyoutFooter>
 

@@ -77,27 +77,33 @@
                        FontAttributes="Bold"
                        HorizontalTextAlignment="End"></Label>
             </Border>
-            <Label Grid.Row="1"
+            <controls:PetFeatControl Grid.Row="1"
+                                     Grid.Column="0"
+                                     Icon="distance"
+                                     Label="Khoảng cách"
+                                     Value="{Binding PetDetail.distance , StringFormat='{}{0} Km'}"></controls:PetFeatControl>
+            <Image Grid.Row="1" Grid.Column="1" Source="distance"></Image>
+            <Label Grid.Row="2"
                    Grid.ColumnSpan="3"
                    Text="{Binding PetDetail.Description}"
                    FontSize="16"
                    LineHeight="1.5"></Label>
-            <controls:PetFeatControl Grid.Row="2"
+            <controls:PetFeatControl Grid.Row="3"
                                      Grid.Column="0"
                                      Icon="breed"
                                      Label="Giống"
                                      Value="{Binding PetDetail.Breed}"></controls:PetFeatControl>
-            <controls:PetFeatControl Grid.Row="2"
+            <controls:PetFeatControl Grid.Row="3"
                                      Grid.Column="1"
                                      Icon="{Binding PetDetail.GenderImage}"
                                      Label="Giới tính"
                                      Value="{Binding PetDetail.GenderDisplay}"></controls:PetFeatControl>
-            <controls:PetFeatControl Grid.Row="2"
+            <controls:PetFeatControl Grid.Row="3"
                                      Grid.Column="2"
                                      Icon="calendar"
                                      Label="Tuổi"
                                      Value="{Binding PetDetail.Age}"></controls:PetFeatControl>
-            <Grid Grid.Row="3"
+            <Grid Grid.Row="4"
                   RowDefinitions="auto, auto"
                   ColumnDefinitions="auto, 250, auto"
                   ColumnSpacing="10">
@@ -150,7 +156,6 @@
                     </Border.GestureRecognizers>
                 </Border>
             </Grid>
-            <Label Grid.Row="4" Text="{Binding PetDetail.distance}"></Label>
         </Grid>
         <Button Grid.Row="3"
                 Text="Nhận nuôi ngay"

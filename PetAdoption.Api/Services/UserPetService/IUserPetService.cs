@@ -4,6 +4,7 @@ namespace PetAdoption.Api.Services
 {
     public interface IUserPetService
     {
+        Task<ApiResponse<List<PetListDto>>> GetBySearch(string? input, int Id);
         Task<ApiResponse> AdopPetAsync(int userId, int petId);
         Task<ApiResponse<List<PetListDto>>> GetAdoptionPetList(int userId);
         Task<ApiResponse<List<PetListDto>>> GetFavoritePetList(int userId);
@@ -13,9 +14,9 @@ namespace PetAdoption.Api.Services
         Task<ApiResponse> UpdatePet(int petId, PetUpdateDto dto);
         Task<ApiResponse> DeletePet(int petId);
         Task<ApiResponse<List<PetListDto>>> GetAllPetList(string address);
-        Task<ApiResponse<List<PetListDto>>> GetNewPetList(int count, string address);
+        Task<ApiResponse<List<PetListDto>>> GetNewPetList(int count, int ownerId, string address);
         Task<ApiResponse<PetDetailDto>> GetPet(int petId, int userId, string address);
-        Task<ApiResponse<List<PetListDto>>> GetPopularPetList(int count, string address);
-        Task<ApiResponse<List<PetListDto>>> GetRandomPetList(int count, string address);
+        Task<ApiResponse<List<PetListDto>>> GetPopularPetList(int count, int ownerId, string address);
+        Task<ApiResponse<List<PetListDto>>> GetRandomPetList(int count, int ownerId, string address);
     }
 }

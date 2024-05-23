@@ -29,32 +29,29 @@ builder.Services.AddAuthentication(option =>
         options.TokenValidationParameters.ValidateAudience = false; // Add this line
         options.TokenValidationParameters.ValidateLifetime = true; // Add this line
         options.TokenValidationParameters.ValidateIssuerSigningKey = true; // Add this line
-        options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MotCaiKeyNgauNhienNgay@@!!&&15-03")); // Add your secret key here
+        options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])); // Add your secret key here
     });
 
-builder.Services.AddSwaggerGen(option =>
+builder.Services.AddSwaggerGen(opt =>
 {
-    option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme,
-        securityScheme: new OpenApiSecurityScheme
-        {
-            Name = "Authorization",
-            Description = "Enter token: ",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer"
-        });
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    var securitySchema = new OpenApiSecurityScheme
     {
+        Name = "JWT Authentication",
+        Description = "Enter JWT Bearer",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        Reference = new OpenApiReference
         {
-        new OpenApiSecurityScheme
-        {
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = JwtBearerDefaults.AuthenticationScheme
-            }
-        }, new string[]{}
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"
         }
+    };
+    opt.AddSecurityDefinition("Bearer", securitySchema);
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { securitySchema, new[] { "Bearer" } }
     });
 });
 

@@ -13,6 +13,7 @@ namespace PetAdoption.Shared.Dtos
         public string Type { get; set; }
         public string Address { get; set; }
         public double Distance { get; set; }
+        public int OwnerId { get; set; }
         public AdoptionStatus AdoptionStatus { get; set; }
 
     }

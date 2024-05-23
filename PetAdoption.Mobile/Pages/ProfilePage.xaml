@@ -69,6 +69,9 @@
             <controls:ProfileOptionRow Text="Đổi mật khẩu"
                                        Option="changePassword"
                                        Tapped="ProfileOptionRow_Tapped"></controls:ProfileOptionRow>
+            <controls:ProfileOptionRow Text="Cập nhật thông tin"
+                                       Option="myProfile"
+                                       Tapped="ProfileOptionRow_Tapped"></controls:ProfileOptionRow>
         </VerticalStackLayout>
         <Button Grid.Row="2"
                 Padding="50,5"

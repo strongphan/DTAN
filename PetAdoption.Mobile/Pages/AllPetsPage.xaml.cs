@@ -15,4 +15,12 @@ public partial class AllPetsPage : ContentPage
         base.OnAppearing();
         await _viewModel.InitializeAsync();
     }
+
+    private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(e.OldTextValue) && string.IsNullOrWhiteSpace(e.NewTextValue))
+        {
+            _viewModel.SearchCommand.Execute(null);
+        }
+    }
 }

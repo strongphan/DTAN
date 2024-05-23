@@ -5,6 +5,13 @@ namespace PetAdoption.Mobile.Services
     [Headers("Authorization: Bearer")]
     public interface IUsersApi
     {
+        [Put("/api/Users")]
+        Task<ApiResponse> UpdateUserAsync(UserDto dto);
+
+        [Get("/api/Users/{Id}")]
+        Task<Shared.Dtos.ApiResponse<UserDto>> GetUserById(int Id);
+
+
         [Post("/api/Users/adopt/{petId}")]
         Task<ApiResponse> AdopPetAsync(int petId);
 
@@ -40,7 +47,7 @@ namespace PetAdoption.Mobile.Services
         [Delete("/api/Users/delete/{petId}")]
         Task<ApiResponse> DeletePetAsync(int petId);
         [Get("/api/Users/pet")]
-        Task<Shared.Dtos.ApiResponse<PetListDto[]>> GetAllPetList();
+        Task<Shared.Dtos.ApiResponse<PetListDto[]>> GetBySearch(string? input);
         [Get("/api/Users/pet/new/{count}")]
         Task<Shared.Dtos.ApiResponse<PetListDto[]>> GetNewPetList(int count);
         [Get("/api/Users/pet/popular/{count}")]

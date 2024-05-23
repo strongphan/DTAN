@@ -12,6 +12,7 @@ namespace PetAdoption.Shared.Dtos
 
         public byte[] ImageData { get; set; }
 
+        [Required]
         public string? Type { get; set; }
 
         [Required]
@@ -24,7 +25,7 @@ namespace PetAdoption.Shared.Dtos
 
         [Required]
         public DateTime DateOfBirth { get; set; }
-
+        [Required]
         public string Description { get; set; } = null!;
 
         public int Views { get; set; } = 0!;

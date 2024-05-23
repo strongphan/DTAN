@@ -51,8 +51,6 @@ namespace PetAdoption.Mobile.ViewModels
 
         public async Task InitializeAsync()
         {
-            if (_isInitialize)
-                return;
             IsBusy = true;
             try
             {

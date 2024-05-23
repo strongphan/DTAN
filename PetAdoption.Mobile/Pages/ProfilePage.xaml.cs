@@ -24,6 +24,9 @@ public partial class ProfilePage : ContentPage
             case "myPets":
                 await _viewModel.GoToAsync(nameof(OwnersPage));
                 break;
+            case "myProfile":
+                await _viewModel.GoToAsync(nameof(EditProfilePage));
+                break;
             default: break;
         }
     }

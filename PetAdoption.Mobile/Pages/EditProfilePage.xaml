@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PetAdoption.Mobile.Pages.EditProfilePage"
+             xmlns:vm="clr-namespace:PetAdoption.Mobile.ViewModels"
+             xmlns:models="clr-namespace:PetAdoption.Mobile.Models"
+             x:DataType="vm:EditProfileViewModel"
+             Title="EditProfilePage">
+    <StackLayout Orientation="Vertical"
+                 Spacing="10">
+        <StackLayout Orientation="Horizontal"
+                     Spacing="10">
+            <Label Text="Tên Người dùng"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"></Label>
+            <Entry Placeholder="Tên..."
+                   Text="{Binding Model.Name}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="StartAndExpand" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     Spacing="10">
+            <Label Text="Email"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"></Label>
+            <Entry Placeholder="Email..."
+                   Text="{Binding Model.Email}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="StartAndExpand" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     Spacing="10">
+            <Label Text="Địa chỉ"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"></Label>
+            <Entry Placeholder="Dia chi..."
+                   Text="{Binding Model.Address}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="StartAndExpand" />
+        </StackLayout>
+        
+        <StackLayout Orientation="Horizontal"
+                     Spacing="10">
+            <Label Text="SDT"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"></Label>
+            <Entry Placeholder="SDT..."
+                   Text="{Binding Model.Phone}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="StartAndExpand" />
+        </StackLayout>
+        
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Ảnh avatar"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"></Label>
+            <Image Source="{Binding Image}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="FillAndExpand"
+                   WidthRequest="100"
+                   HeightRequest="100" />
+            <Button Text="Chọn ảnh"
+                    Command="{Binding SelectImageCommand}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End" />
+        </StackLayout>
+        <StackLayout Orientation="Vertical">
+            <Button Text="Lưu"
+                    Command="{Binding UpdateCommand}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="FillAndExpand" />
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

@@ -3,10 +3,14 @@
     public partial class AllPetsViewModel : BaseViewModel
     {
         private readonly IPetsApi _petsApi;
+        private readonly AuthService _authService;
+        private readonly IUsersApi _usersApi;
 
-        public AllPetsViewModel(IPetsApi petsApi)
+        public AllPetsViewModel(IPetsApi petsApi, AuthService authService, IUsersApi usersApi)
         {
             this._petsApi = petsApi;
+            _authService = authService;
+            _usersApi = usersApi;
         }
 
         [ObservableProperty]
@@ -15,6 +19,8 @@
         [ObservableProperty]
         private bool _isRefreshing;
 
+        [ObservableProperty]
+        private bool _isSearching;
         private bool _isInitialized;
 
         public async Task InitializeAsync()
@@ -31,16 +37,23 @@
                 IsRefreshing = true;
             try
             {
-                var task = _petsApi.GetAllPetList();
-                await Task.WhenAll(task);
-                var res = task.Result;
-                if (res.IsSuccess)
+                ApiResponse<PetListDto[]> task;
+                if (_authService.IsLoggedIn)
                 {
-                    Pets = res.Data;
+                    task = await _usersApi.GetBySearch("");
                 }
                 else
                 {
-                    await ShowAlertAsync("Có lỗi", res.Msg);
+                    task = await _petsApi.GetAllPetList();
+
+                }
+                if (task.IsSuccess)
+                {
+                    Pets = task.Data;
+                }
+                else
+                {
+                    await ShowAlertAsync("Có lỗi", task.Msg);
                 }
             }
             catch (Exception ex)
@@ -56,5 +69,25 @@
 
         [RelayCommand]
         private async Task LoadPets() => await LoadAllPetsAsync(false);
+        [RelayCommand]
+        private async Task Search(string input)
+        {
+            try
+            {
+                IsBusy = true;
+
+                var task = await _petsApi.GetBySearch(input);
+
+                if (task.IsSuccess)
+                {
+                    Pets = task.Data;
+                }
+                IsBusy = false;
+            }
+            catch (Exception ex)
+            {
+                await ShowAlertAsync("Co loi: ", ex.Message);
+            }
+        }
     }
 }

@@ -59,6 +59,7 @@ namespace PetAdoption.Mobile
             services.AddTransientWithShellRoute<AdoptionsPage, MyAdoptionsViewModel>(nameof(AdoptionsPage));
 
             services.AddTransientWithShellRoute<OwnersPage, OwnerViewModel>(nameof(OwnersPage));
+            services.AddTransientWithShellRoute<EditProfilePage, EditProfileViewModel>(nameof(EditProfilePage));
             services.AddTransientWithShellRoute<CreatePetPage, CreatePetViewModel>(nameof(CreatePetPage));
             services.AddTransientWithShellRoute<UpdatePetPage, UpdatePetViewModel>(nameof(UpdatePetPage));
         }

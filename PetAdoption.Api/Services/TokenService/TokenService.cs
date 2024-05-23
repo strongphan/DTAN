@@ -54,6 +54,7 @@ public sealed class TokenService : ITokenService
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.StreetAddress, user.Address),
+                    new Claim(ClaimTypes.Role, "admin"),
                 };
         if (additionalClaims?.Any() == true)
             claims.AddRange(additionalClaims!);

@@ -20,6 +20,10 @@ namespace PetAdoption.Api.Controllers
         public async Task<ApiResponse<List<PetListDto>>> GetAllPetList() =>
             await _petService.GetAllPetList();
 
+        [HttpGet("filter")]
+        public async Task<ApiResponse<List<PetListDto>>> GetBySearch(string? input) =>
+            await _petService.GetBySearch(input);
+
         [HttpGet("new/{count:int}")]
         public async Task<ApiResponse<List<PetListDto>>> GetNewPetList(int count) =>
             await _petService.GetNewPetList(count);
