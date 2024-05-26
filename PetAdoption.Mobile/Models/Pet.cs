@@ -10,7 +10,7 @@ namespace PetAdoption.Mobile.Models
         public string Image { get; set; }
         public double Price { get; set; }
         public string Breed { get; set; }
-        public double distance { get; set; }
+        public double Distance { get; set; }
 
         [ObservableProperty]
         private bool _isFavorite;

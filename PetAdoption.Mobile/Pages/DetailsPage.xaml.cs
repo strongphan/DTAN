@@ -1,4 +1,4 @@
-namespace PetAdoption.Mobile.Pages;
+﻿namespace PetAdoption.Mobile.Pages;
 
 public partial class DetailsPage : ContentPage
 {

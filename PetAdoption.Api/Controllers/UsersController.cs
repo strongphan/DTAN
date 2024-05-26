@@ -13,15 +13,22 @@ namespace PetAdoption.Api.Controllers
         private readonly IUserPetService _userPetService;
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
+        private readonly IUserFriendService _userFriendService;
 
         private int UserId => Convert.ToInt32(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
         private string UserAddress => Convert.ToString(User.Claims.First(c => c.Type == ClaimTypes.StreetAddress).Value);
-        public UsersController(IUserPetService userPetService, IAuthService authService, IUserService userService)
+        public UsersController(
+            IUserPetService userPetService, IAuthService authService, IUserService userService, IUserFriendService userFriendService)
         {
             _userPetService = userPetService;
             _authService = authService;
             _userService = userService;
+            _userFriendService = userFriendService;
         }
+        [HttpPost("friendId")]
+        public async Task<ApiResponse> AddFriend(int friendId) =>
+            await _userFriendService.AddFriend(UserId, friendId);
+
         [HttpGet("{Id}")]
         public async Task<ApiResponse<UserDto>> GetUserById(int Id) =>
             await _userService.GetUserById(Id);

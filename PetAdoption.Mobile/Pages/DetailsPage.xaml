@@ -81,8 +81,16 @@
                                      Grid.Column="0"
                                      Icon="distance"
                                      Label="Khoảng cách"
-                                     Value="{Binding PetDetail.distance , StringFormat='{}{0} Km'}"></controls:PetFeatControl>
-            <Image Grid.Row="1" Grid.Column="1" Source="distance"></Image>
+                                     Value="{Binding PetDetail.Distance , StringFormat='{}{0} Km'}">
+                <controls:PetFeatControl.Triggers>
+                    <DataTrigger TargetType="controls:PetFeatControl"
+                                 Binding="{Binding IsLoggedIn}"
+                                 Value="True">
+                        <Setter Property="IsVisible"
+                                Value="True" />
+                    </DataTrigger>
+                </controls:PetFeatControl.Triggers>
+            </controls:PetFeatControl>
             <Label Grid.Row="2"
                    Grid.ColumnSpan="3"
                    Text="{Binding PetDetail.Description}"
@@ -118,7 +126,12 @@
                            Source="{Binding PetDetail.Owner.ProfilePicture}"
                            VerticalOptions="Center"
                            WidthRequest="36"
-                           Aspect="AspectFill" />
+                           Aspect="AspectFill">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Path=GotoChatPage, Source={RelativeSource AncestorType={x:Type vm:DetailViewModel}}}"
+                                                  CommandParameter="{Binding PetDetail.Owner.Id}" />
+                        </Image.GestureRecognizers>
+                    </Image>
                 </Frame>
                 <Border Grid.RowSpan="2"
                         Grid.Column="0"
@@ -152,7 +165,8 @@
                         Style="{StaticResource iconBtn}">
                     <Image Source="messager"></Image>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding GoBackCommand}"></TapGestureRecognizer>
+                        <TapGestureRecognizer Command="{Binding Path=GotoChatPage, Source={RelativeSource AncestorType={x:Type vm:DetailViewModel}}}"
+                                              CommandParameter="{Binding PetDetail.Owner.Id}" />
                     </Border.GestureRecognizers>
                 </Border>
             </Grid>

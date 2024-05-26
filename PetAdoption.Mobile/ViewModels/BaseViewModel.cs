@@ -6,10 +6,6 @@
         [ObservableProperty]
         private bool _isBusy;
 
-        /*[RelayCommand]
-        public async Task GoToChatPage(int userId, int receiverId) =>
-            await GoToAsync($"{nameof(ChatPage)}?SenderId={userId}&ReceiverId={receiverId}");*/
-
         [RelayCommand]
         public async Task GoToDetailPage(int petId) =>
           await GoToAsync($"{nameof(DetailsPage)}?{nameof(DetailViewModel.PetId)}={petId}");

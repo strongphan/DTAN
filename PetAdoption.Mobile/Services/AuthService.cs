@@ -52,8 +52,8 @@ namespace PetAdoption.Mobile.Services
             }
             var user = new LoggedInUser(apiResponse.Data.UserId, apiResponse.Data.Name, apiResponse.Data.ProfilePicture, apiResponse.Data.Address, apiResponse.Data.Token);
             _commonService.SetToken(apiResponse.Data.Token);
-            _commonService.ToggleLoginStatus();
             SetUser(user);
+            _commonService.ToggleLoginStatus();
             return true;
         }
         private void SetUser(LoggedInUser user) =>

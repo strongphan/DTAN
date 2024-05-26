@@ -18,6 +18,6 @@ public partial class AdoptionSuccessPage : ContentPage
     }
     private async void Button_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync($"{nameof(HomePage)}");
+        await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
     }
 }

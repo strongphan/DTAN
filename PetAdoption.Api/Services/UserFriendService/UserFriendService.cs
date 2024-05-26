@@ -13,6 +13,33 @@ namespace PetAdoption.Api.Services
             _petContext = petContext;
             _userService = userService;
         }
+
+        public async Task<ApiResponse> AddFriend(int userId, int friendId)
+        {
+            try
+            {
+                var existFriend = _petContext.UserFriends
+                    .Where(f => (f.UserId == userId && f.FriendId == friendId) || (f.UserId == friendId && f.FriendId == userId));
+                if (existFriend == null)
+                {
+                    UserFriend userFriend = new()
+                    {
+                        UserId = userId,
+                        FriendId = friendId
+                    };
+                    _petContext.UserFriends.Add(userFriend);
+                    await _petContext.SaveChangesAsync();
+                }
+                return ApiResponse.Success();
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse.Fail(ex.Message);
+
+            }
+
+        }
+
         public async Task<ApiResponse<UserDto[]>> GetListUserFriend(int userId)
         {
             try

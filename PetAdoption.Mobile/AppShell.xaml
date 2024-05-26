@@ -47,26 +47,22 @@
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent
-            Title="Home"
             ContentTemplate="{DataTemplate pages:HomePage}"
             Icon="home"
             Route="HomePage" />
         <ShellContent
-            Title="All Pets"
             ContentTemplate="{DataTemplate pages:AllPetsPage}"
             Icon="list"
             Route="AllPetsPage" />
         <ShellContent
-            Title="Favorites"
             ContentTemplate="{DataTemplate pages:FavoritesPage}"
             Icon="heart"
             Route="FavoritesPage" />
-        <ShellContent Title="Chat"
+        <ShellContent 
                       ContentTemplate="{DataTemplate pages:ListChatPage}"
                       Icon="messager"
                       Route="ListChatPage" />
         <ShellContent
-            Title="Profile"
             ContentTemplate="{DataTemplate pages:ProfilePage}"
             Icon="user"
             Route="ProfilePage" />

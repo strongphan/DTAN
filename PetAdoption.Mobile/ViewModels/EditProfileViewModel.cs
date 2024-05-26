@@ -33,7 +33,8 @@ namespace PetAdoption.Mobile.ViewModels
             {
                 if (!_authService.IsLoggedIn)
                 {
-                    await ShowToastAsync("Cần đăng nhập để xem!!");
+                    await ShowAlertAsync("Chưa đăng nhập", "Cần đăng nhập để xem!!");
+                    await GoToAsync($"//{nameof(HomePage)}");
                     return;
                 }
                 var user = _authService.GetUser();

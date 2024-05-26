@@ -95,7 +95,7 @@
                             </Image.Behaviors>
                         </Image>
                         <Label Margin="10,0,0,0"
-                               Text="Search"
+                               Text="Tim kiếm"
                                TextColor="Gray"
                                VerticalOptions="Center" />
                     </StackLayout>

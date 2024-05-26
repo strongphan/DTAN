@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using PetAdoption.Mobile.Hub;
 using PetAdoption.Shared;
 using PetAdoption.Shared.Enumerations;
 using PetAdoption.Shared.IPetHub;
@@ -8,21 +9,25 @@ namespace PetAdoption.Mobile.ViewModels
     [QueryProperty(nameof(PetId), nameof(PetId))]
     public partial class DetailViewModel : BaseViewModel, IAsyncDisposable
     {
-        public DetailViewModel(IPetsApi petsApi, AuthService authService, IUsersApi usersApi)
+        public DetailViewModel(IPetsApi petsApi, AuthService authService, IUsersApi usersApi, ChatHub chatHub)
         {
             this._petsApi = petsApi;
             _authService = authService;
             _usersApi = usersApi;
+            _chatHub = chatHub;
         }
         [ObservableProperty]
         private int _petId;
 
+        [ObservableProperty]
+        private bool _isLoggedIn;
         [ObservableProperty]
         private Pet _petDetail = new();
 
         private readonly IPetsApi _petsApi;
         private readonly AuthService _authService;
         private readonly IUsersApi _usersApi;
+        private readonly ChatHub _chatHub;
         private HubConnection _connection;
         private async Task ConfigureSignalRHubConnectionAsync(int currentPetId)
         {
@@ -61,7 +66,8 @@ namespace PetAdoption.Mobile.ViewModels
             try
             {
                 await ConfigureSignalRHubConnectionAsync(petId);
-                var res = _authService.IsLoggedIn
+                IsLoggedIn = _authService.IsLoggedIn;
+                var res = IsLoggedIn
                     ? await _usersApi.GetPet(petId)
                     : await _petsApi.GetPet(petId);
 
@@ -81,7 +87,7 @@ namespace PetAdoption.Mobile.ViewModels
                         IsFavorite = pet.isFavorite,
                         Image = pet.Image,
                         Owner = pet.Owner,
-                        distance = pet.Distance,
+                        Distance = pet.Distance,
                     };
                 }
                 else
@@ -102,7 +108,27 @@ namespace PetAdoption.Mobile.ViewModels
 
         [RelayCommand]
         private async Task GoBackAsync() => await GoToAsync("..");
+        [RelayCommand]
+        private async Task GotoChatPage(int param)
+        {
+            if (!_authService.IsLoggedIn)
+            {
+                var result = await ShowConfirmAsync("Chưa đăng nhập", "Cần đăng nhập để nhận nuôi. " + Environment.NewLine + "Bạn có muốn đi đến đăng nhập");
+                if (result)
+                {
+                    await GoToAsync($"//{nameof(LoginRegisterPage)}");
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            var userId = _authService.GetUser().Id;
 
+            await Shell.Current.GoToAsync($"ChatPage?SenderId={userId}&ReceiverId={param}");
+
+        }
         [RelayCommand]
         private async Task ToggleFavorite()
         {
@@ -129,49 +155,63 @@ namespace PetAdoption.Mobile.ViewModels
         [RelayCommand]
         private async Task AdoptNowAsync()
         {
-            if (!_authService.IsLoggedIn)
+            var confirm = await ShowConfirmAsync("Xác nhận", "Bạn có chắc chắn muốn nhận nuôi thú cưng này?");
+
+            if (confirm)
             {
-                var result = await ShowConfirmAsync("Chưa đăng nhập", "Cần đăng nhập để nhận nuôi. " + Environment.NewLine + "Bạn có muốn đi đến đăng nhập");
-                if (result)
+                if (!_authService.IsLoggedIn)
                 {
-                    await GoToAsync($"//{nameof(LoginRegisterPage)}");
-                }
-                else
-                {
-                    return;
-                }
-            }
-            IsBusy = true;
-            try
-            {
-                var res = await _usersApi.AdopPetAsync(PetId);
-                if (res.IsSuccess)
-                {
-                    PetDetail.AdoptionStatus = AdoptionStatus.Adopted;
-                    if (_connection is not null)
+                    var result = await ShowConfirmAsync("Chưa đăng nhập", "Cần đăng nhập để nhận nuôi. " + Environment.NewLine + "Bạn có muốn đi đến đăng nhập");
+                    if (result)
                     {
-                        try
-                        {
-                            await _connection.SendAsync(nameof(IPetServerHub.PetAdopted), PetId);
-                        }
-                        catch
-                        {
-                        }
+                        await GoToAsync($"//{nameof(LoginRegisterPage)}");
+                        return;
                     }
-                    await GoToAsync(nameof(AdoptionSuccessPage));
-
+                    else
+                    {
+                        return;
+                    }
                 }
-                else
+                IsBusy = true;
+                try
                 {
-                    await ShowAlertAsync("Có lỗi", res.Msg);
-                }
-                IsBusy = false;
-            }
-            catch (Exception ex)
-            {
-                IsBusy = false;
-                await ShowAlertAsync("Có lỗi", ex.Message);
+                    var userId = _authService.GetUser().Id;
+                    var res = await _usersApi.AdopPetAsync(PetId);
+                    if (res.IsSuccess)
+                    {
+                        PetDetail.AdoptionStatus = AdoptionStatus.Adopted;
+                        if (_connection is not null)
+                        {
+                            try
+                            {
+                                await _connection.SendAsync(nameof(IPetServerHub.PetAdopted), PetId);
+                            }
+                            catch
+                            {
+                            }
+                        }
+                        await _chatHub.Connect(userId);
+                        await _chatHub.SendMessageToUser(userId, PetDetail.Owner.Id, "Tôi đã nhận nuôi thú cưng của bạn, vui lòng liên hệ để giao dịch!!");
+                        await _chatHub.Disconnect(userId);
+                        await GoToAsync(nameof(AdoptionSuccessPage));
 
+                    }
+                    else
+                    {
+                        await ShowAlertAsync("Có lỗi", res.Msg);
+                    }
+                    IsBusy = false;
+                }
+                catch (Exception ex)
+                {
+                    IsBusy = false;
+                    await ShowAlertAsync("Có lỗi", ex.Message);
+
+                }
+            }
+            else
+            {
+                return;
             }
         }
 
@@ -193,27 +233,5 @@ namespace PetAdoption.Mobile.ViewModels
         }
 
     }
-    public class DirectionsResult
-    {
-        public Route[] routes { get; set; }
-    }
-    public class RouteResponse
-    {
-        public double TravelDistance { get; set; }
-        // Add other relevant properties if needed
-    }
-    public class Route
-    {
-        public Leg[] legs { get; set; }
-    }
 
-    public class Leg
-    {
-        public Distance distance { get; set; }
-    }
-
-    public class Distance
-    {
-        public double value { get; set; }
-    }
 }

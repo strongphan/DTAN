@@ -18,6 +18,8 @@
             if (!_authService.IsLoggedIn)
             {
                 await ShowToastAsync("Cần đăng nhập để xem!!");
+
+                await GoToAsync($"//{nameof(HomePage)}");
                 return;
             }
             try
